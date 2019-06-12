@@ -14,6 +14,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class WebClientProvider implements Provider<WebClient> {
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
     private Scheme scheme;
     private String key;
     private String secret;
@@ -38,9 +40,10 @@ public class WebClientProvider implements Provider<WebClient> {
 
 
     private WebClient basic(String username, String password) {
+        String base64Encoded = Base64Utils.encodeToString((username + ":" + password).getBytes(UTF_8));
         return WebClient.builder()
-                .defaultHeader("Authorization",
-                        "Basic " + Base64Utils.encodeToString((username + ":" + password).getBytes(UTF_8))).build();
+                .defaultHeader(AUTHORIZATION_HEADER, "Basic " + base64Encoded)
+                .build();
     }
 
 
@@ -49,9 +52,10 @@ public class WebClientProvider implements Provider<WebClient> {
         final SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
 
         return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(HttpClient.create().secure(builder ->
-                        builder.sslContext(sslContextBuilder)
-                )))
+                .clientConnector(new ReactorClientHttpConnector(
+                        HttpClient.create()
+                                .secure(builder -> builder.sslContext(sslContextBuilder))
+                ))
                 .build();
     }
 

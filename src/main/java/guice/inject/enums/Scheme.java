@@ -10,7 +10,4 @@ public enum Scheme {
         this.value = value;
     }
 
-    public String value() {
-        return value;
-    }
 }
