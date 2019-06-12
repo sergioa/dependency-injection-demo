@@ -14,13 +14,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class WebClientProvider implements Provider<WebClient> {
 
-    private String scheme;
+    private Scheme scheme;
     private String key;
     private String secret;
 
 
     @Inject
-    public WebClientProvider(@Named("scheme") String scheme,
+    public WebClientProvider(@Named("scheme") Scheme scheme,
                              @Named("key") String key,
                              @Named("secret") String secret) {
         this.scheme = scheme;
@@ -30,7 +30,7 @@ public class WebClientProvider implements Provider<WebClient> {
 
 
     public WebClient get() {
-        return switch (Scheme.valueOf(scheme)) {
+        return switch (scheme) {
             case BASIC -> basic(key, secret);
             case MUTUAL -> mutual(key, secret);
         };

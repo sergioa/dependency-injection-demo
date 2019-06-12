@@ -9,4 +9,8 @@ public enum Scheme {
     Scheme(String value) {
         this.value = value;
     }
+
+    public String value() {
+        return value;
+    }
 }
